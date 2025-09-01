@@ -1,0 +1,77 @@
+//use ini_set function to change how session.use_only_cookies is executed
+//use of premade functions
+ini_set(session.use_only_cookies)
+
+//use of premade function to change qualities of how sessions are used during the programs return time
+session_set_cookie_params(
+    $lifetime = 30 mins,
+    $path = null,
+    $domain = my_server,
+    $secure = true,
+    $httponly = true,
+);
+
+//premade function to start session 
+session_start();
+
+function regenerate_session_id() {
+    if (!isset($_SESSION["last_regeneration"])) {
+        session_regenerate_id(true);
+    } else {
+        $interval = 60 * 30; // 30 minutes
+        if (time() - $_SESSION["last_regeneration"] >= $interval) {
+    //use of php prebuilt operation 
+    session_regenerate_id(true);
+        }
+    }
+    Get timestamp for when each session is last generated
+}
+
+function regenerate_session_id_loggedin() {
+    //use of php prebuilt operation  to regenerate the id
+    session_regenerate_id(true);
+        //fetches userId from the $_SESSION variable
+        //new session when something changes to improve security
+        //used to create completely new session id
+        $newsessionId = session_create_id();
+        //pair together the user id and the session id
+        $sessionId = $newsessionId + $userId;
+        //set the new session id
+    //Get timestamp for when each session is last generated
+}
+
+
+session_unset();
+session_destroy();
+
+CREATE TABLE users (
+    user_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, //randomly generate and autoincrement an 11 character user_id
+    email VARCHAR(255) UNIQUE NOT NULL, //email between 255 characters length and not accepting null values
+    username VARCHAR(20) UNIQUE NOT NULL, //username between 20 characters not storing null values
+    password VARCHAR(255) NOT NULL, // password between 255 characters length and not accepting null values
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIME, //created_at field that acts as a timestamp of 
+);
+
+CREATE TABLE bookings (
+    bookingID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    paymentID INT UNSIGNED NOT NULL,
+    startStation VARCHAR(50) NOT NULL,
+    destinationStation VARCHAR(50) NOT NULL,
+    startDate DATE NOT NULL,
+    startTime TIME NOT NULL,
+    returnDate DATE,
+    returnTime TIME,
+    numTickets INT NOT NULL,
+    totalPrice INT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userID) REFERENCES users(userID),
+    FOREIGN KEY (paymentID) REFERENCES payments(paymentID)
+);
+
+CREATE TABLE announcements (
+    announcementID INT UNSIGNED NOT NULL, AUTO_INCREMENT PRIMARY KEY, --auto increment primary key id
+    announcement VARCHAR(300) NOT NULL, --announcement cannot be null or more than 300 characters
+    date DATE NOT NULL, --must not be null
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, --timestamp time of creation
+);
